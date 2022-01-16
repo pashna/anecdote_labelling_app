@@ -1,0 +1,26 @@
+[
+  {
+    "topic_id": 0,
+    "title": "default title",
+    "title_candidates": [
+      "good title candidate 1",
+      "good title candidate 2",
+      "good title candidate 3",
+      "good title candidate 4",
+      "good title candidate 5"
+    ],
+    "cluster_name": "cluster #1",
+    "messages": {
+      "message relevant to the topic 1": 1,
+      "message relevant to the topic 2": 1,
+      "message relevant to the topic 3": 1,
+      "message relevant to the topic 4": 1,
+      "message relevant to the topic 5": 1,
+      "message relevant to the topic 6": 1,
+      "message relevant to the topic 7": 1,
+      "message relevant to the topic 8": 1,
+      "message relevant to the topic 9": 1,
+      "message relevant to the topic 10": 1
+    }
+  }
+]
