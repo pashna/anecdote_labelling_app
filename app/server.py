@@ -1,5 +1,5 @@
 import dash
-import re
+import base64
 import json
 import dash_core_components as dcc
 from dash.dependencies import Output, Input, State
@@ -100,22 +100,22 @@ app.layout = dbc.Container([dbc.Row([dbc.Col([html.Img(src='/assets/logo.png', h
               Input('nonsense_btn', 'n_clicks'),
               Input('skip_btn', 'n_clicks'),
               Input('file_upload', 'contents'),
-              State('file_upload', 'filename'),
               State(component_id='topic_id_dd', component_property='options'),
               State(component_id='topic_id_dd', component_property='value'),
               State('topic_name_input', 'value'),
               State('cluster_name_input', 'value'),
               State('message_examples_cl', 'value'),
               prevent_initial_call=True)
-def update_dataset(_0, _1, _2, _3, filename, topics_id_options, topic_id_value, topic_name, cluster_name, selected_messages):
+def update_dataset(_0, _1, _2, content, topics_id_options, topic_id_value, topic_name, cluster_name, selected_messages):
     trigger_id = dash.callback_context.triggered[0]["prop_id"].split(".")[0]
     if trigger_id == 'file_upload':
         try:
-            with open(filename, 'r') as f:
-                ds.data = json.load(f)
+            content_type, content_string = content.split(',')
+            ds.data = json.loads(base64.b64decode(content_string))
             topics_id_options = [{'label': i, 'value': i} for i in range(len(ds.data))]
             return topics_id_options, 0, ''
-        except Exception:
+        except Exception as e:
+            print(str(e))
             return topics_id_options, topic_id_value, 'error while reading file'
     elif trigger_id == 'confirm_btn':
         ds.data[topic_id_value]['title'] = topic_name
@@ -167,7 +167,6 @@ def save_data(_):
               State(component_id='cluster_name_input', component_property='value'),
               )
 def update_page(_, input_ri_value, existing_topic_name_value, existing_cluster_name, topic_id, current_topic_name, current_cluster_name):
-    print(_, input_ri_value, existing_topic_name_value, existing_cluster_name, topic_id)
 
     trigger_id = dash.callback_context.triggered[0]["prop_id"].split(".")[0]
     if topic_id is None:
