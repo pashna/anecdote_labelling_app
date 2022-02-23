@@ -6,8 +6,8 @@ from dash.dependencies import Output, Input, State
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 
-class DataStorage:
 
+class DataStorage:
     def __init__(self):
         with open('result_default.json', 'r') as f:
             self.data = json.load(f)
@@ -121,16 +121,19 @@ def update_dataset(_0, _1, _2, content, topics_id_options, topic_id_value, topic
         ds.data[topic_id_value]['title'] = topic_name
         ds.data[topic_id_value]['cluster_name'] = cluster_name if cluster_name else ''
         ds.data[topic_id_value]['is_nonsense'] = 0
-        for k in ds.data[topic_id_value]['messages'].keys():
-            ds.data[topic_id_value]['messages'][k] = 1 if k in selected_messages else 0
+        for i in range(len(ds.data[topic_id_value]['messages'])):
+            if ds.data[topic_id_value]['messages'][i] in selected_messages:
+                ds.data[topic_id_value]['message_flags'][i] = 1
+            else:
+                ds.data[topic_id_value]['message_flags'][i] = 0
 
         return topics_id_options, (topic_id_value + 1) % len(ds.data), ''
     elif trigger_id == 'nonsense_btn':
         ds.data[topic_id_value]['cluster_name'] = NONSENSE
         ds.data[topic_id_value]['title'] = NONSENSE
         ds.data[topic_id_value]['is_nonsense'] = 1
-        for k in ds.data[topic_id_value]['messages'].keys():
-            ds.data[topic_id_value]['messages'][k] = 0
+        for i in range(len(ds.data[topic_id_value]['messages'])):
+            ds.data[topic_id_value]['message_flags'][i] = 0
         return topics_id_options, (topic_id_value + 1) % len(ds.data), ''
     elif trigger_id == 'skip_btn':
         return topics_id_options, (topic_id_value + 1) % len(ds.data), ''
@@ -175,7 +178,8 @@ def update_page(_, input_ri_value, existing_topic_name_value, existing_cluster_n
     all_cluster_names = sorted(list(set([t['cluster_name'] for t in ds.data if t != NONSENSE])))
     candidates = ds.data[topic_id]['title_candidates']
     message_examples, message_checked = [], []
-    for message, checked in ds.data[topic_id]['messages'].items():
+    for message, checked in zip(ds.data[topic_id]['original_messages'],
+                                ds.data[topic_id]['message_flags']):
         message_examples.append({'label': message, 'value': message})
         if checked:
             message_checked.append(message)
