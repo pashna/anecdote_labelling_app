@@ -5,8 +5,9 @@ import dash_core_components as dcc
 from dash.dependencies import Output, Input, State
 import dash_html_components as html
 import dash_bootstrap_components as dbc
+import numpy as np
 
-
+SEP = '-|||-'
 class DataStorage:
     def __init__(self):
         with open('result_default.json', 'r') as f:
@@ -108,6 +109,7 @@ app.layout = dbc.Container([dbc.Row([dbc.Col([html.Img(src='/assets/logo.png', h
               prevent_initial_call=True)
 def update_dataset(_0, _1, _2, content, topics_id_options, topic_id_value, topic_name, cluster_name, selected_messages):
     trigger_id = dash.callback_context.triggered[0]["prop_id"].split(".")[0]
+    selected_messages = [sm.split(SEP)[0] for sm in selected_messages]
     if trigger_id == 'file_upload':
         try:
             content_type, content_string = content.split(',')
@@ -170,7 +172,6 @@ def save_data(_):
               State(component_id='cluster_name_input', component_property='value'),
               )
 def update_page(_, input_ri_value, existing_topic_name_value, existing_cluster_name, topic_id, current_topic_name, current_cluster_name):
-
     trigger_id = dash.callback_context.triggered[0]["prop_id"].split(".")[0]
     if topic_id is None:
         topic_id = 0
@@ -180,9 +181,11 @@ def update_page(_, input_ri_value, existing_topic_name_value, existing_cluster_n
     message_examples, message_checked = [], []
     for message, checked in zip(ds.data[topic_id]['original_messages'],
                                 ds.data[topic_id]['message_flags']):
-        message_examples.append({'label': message, 'value': message})
+        r = str(np.random.rand())
+        checked = bool(checked)
+        message_examples.append({'label': message, 'value': message + SEP + r})
         if checked:
-            message_checked.append(message)
+            message_checked.append(message + SEP + r)
 
     if trigger_id == 'topic_name_candidates_ri':
         title = input_ri_value
