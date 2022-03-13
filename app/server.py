@@ -7,14 +7,27 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 import numpy as np
 
-SEP = '-|||-'
+
 class DataStorage:
     def __init__(self):
         with open('result_default.json', 'r') as f:
             self.data = json.load(f)
 
+
+SEP = '-|||-'
 NONSENSE = 'NONSENSE'
 ds = DataStorage()
+HARDCODED_CLUSTERS = ['Company / Brand',
+                      'App experience',
+                      'Logistics',
+                      'Buying Experience',
+                      'Support',
+                      'Attributes',
+                      'Value',
+                      'Post-purchase',
+                      'Payment',
+                      'Account',
+                      'Software issue / Bugs']
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css',
                         dbc.themes.BOOTSTRAP]
@@ -176,7 +189,8 @@ def update_page(_, input_ri_value, existing_topic_name_value, existing_cluster_n
     if topic_id is None:
         topic_id = 0
     all_topic_names = sorted(list(set([t['title'] for t in ds.data])))
-    all_cluster_names = sorted(list(set([t['cluster_name'] for t in ds.data if t != NONSENSE])))
+    all_cluster_names = [t['cluster_name'] for t in ds.data if t != NONSENSE] + HARDCODED_CLUSTERS
+    all_cluster_names = sorted(list(set(all_cluster_names)))
     candidates = ds.data[topic_id]['title_candidates']
     message_examples, message_checked = [], []
     for message, checked in zip(ds.data[topic_id]['original_messages'],
