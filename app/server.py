@@ -13,7 +13,7 @@ class DataStorage:
         with open('result_default.json', 'r') as f:
             self.data = json.load(f)
 
-
+DISPLAY_MESSAGE = 'original_messages'
 SEP = '-|||-'
 NONSENSE = 'NONSENSE'
 ds = DataStorage()
@@ -193,7 +193,7 @@ def update_page(_, input_ri_value, existing_topic_name_value, existing_cluster_n
     all_cluster_names = sorted(list(set(all_cluster_names)))
     candidates = ds.data[topic_id]['title_candidates']
     message_examples, message_checked = [], []
-    for message, checked in zip(ds.data[topic_id]['original_messages'],
+    for message, checked in zip(ds.data[topic_id][DISPLAY_MESSAGE],
                                 ds.data[topic_id]['message_flags']):
         r = str(np.random.rand())
         checked = bool(checked)
