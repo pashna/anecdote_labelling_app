@@ -137,7 +137,7 @@ def update_dataset(_0, _1, _2, content, topics_id_options, topic_id_value, topic
         ds.data[topic_id_value]['cluster_name'] = cluster_name if cluster_name else ''
         ds.data[topic_id_value]['is_nonsense'] = 0
         for i in range(len(ds.data[topic_id_value]['messages'])):
-            if ds.data[topic_id_value]['messages'][i] in selected_messages:
+            if ds.data[topic_id_value][DISPLAY_MESSAGE][i] in selected_messages:
                 ds.data[topic_id_value]['message_flags'][i] = 1
             else:
                 ds.data[topic_id_value]['message_flags'][i] = 0
