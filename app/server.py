@@ -13,6 +13,7 @@ class DataStorage:
         with open('result_default.json', 'r') as f:
             self.data = json.load(f)
 
+
 DISPLAY_MESSAGE = 'original_messages'
 SEP = '-|||-'
 NONSENSE = 'NONSENSE'
@@ -136,7 +137,7 @@ def update_dataset(_0, _1, _2, content, topics_id_options, topic_id_value, topic
         ds.data[topic_id_value]['title'] = topic_name
         ds.data[topic_id_value]['cluster_name'] = cluster_name if cluster_name else ''
         ds.data[topic_id_value]['is_nonsense'] = 0
-        for i in range(len(ds.data[topic_id_value]['messages'])):
+        for i in range(len(ds.data[topic_id_value][DISPLAY_MESSAGE])):
             if ds.data[topic_id_value][DISPLAY_MESSAGE][i] in selected_messages:
                 ds.data[topic_id_value]['message_flags'][i] = 1
             else:
